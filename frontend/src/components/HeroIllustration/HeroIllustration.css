@@ -1,0 +1,49 @@
+.hero-illustration-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.illustration-glow-orb {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(199, 112, 240, 0.28) 0%, rgba(127, 0, 255, 0.1) 50%, transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-svg-img {
+  width: 100%;
+  height: auto;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.5));
+}
+
+/* Animations */
+.spin-slow {
+  transform-origin: center;
+  animation: rotateSlow 25s linear infinite;
+}
+
+@keyframes rotateSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.float-item-1 { animation: floatSlow 4s ease-in-out infinite; }
+.float-item-2 { animation: floatSlow 4.5s ease-in-out 0.5s infinite; }
+.float-item-3 { animation: floatSlow 3.8s ease-in-out 1s infinite; }
+.float-item-4 { animation: floatSlow 4.2s ease-in-out 1.5s infinite; }
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}

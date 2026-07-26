@@ -1,0 +1,71 @@
+.share-menu-container {
+  position: relative;
+  display: inline-block;
+}
+
+.share-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(199, 112, 240, 0.3);
+  color: #b0b0b0;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.share-trigger-btn:hover, .share-trigger-btn.active {
+  background: rgba(199, 112, 240, 0.18);
+  border-color: #c770f0;
+  color: #c770f0;
+  box-shadow: 0 0 16px rgba(199, 112, 240, 0.35);
+}
+
+.share-dropdown {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 180px;
+  background: rgba(22, 33, 62, 0.95);
+  border: 1px solid rgba(199, 112, 240, 0.3);
+  border-radius: 12px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 100;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: translate(-50%, 10px) scale(0.95); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+.share-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: #d0d0d0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.share-option:hover {
+  background: rgba(199, 112, 240, 0.15);
+  color: #fff;
+}

@@ -1,0 +1,48 @@
+.tech-stack-section {
+  padding: 60px 0;
+}
+
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.tech-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 28px 16px;
+  text-align: center;
+  border: 1.5px solid rgba(199, 112, 240, 0.25);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tech-card:hover {
+  transform: scale(1.08);
+  border-color: #c770f0;
+  box-shadow: 0 0 25px rgba(199, 112, 240, 0.4);
+  background: rgba(199, 112, 240, 0.12);
+}
+
+.tech-icon {
+  font-size: 2.8rem;
+  transition: transform 0.3s ease;
+}
+
+.tech-card:hover .tech-icon {
+  transform: scale(1.15) rotate(5deg);
+}
+
+.tech-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #fff;
+  font-family: 'Raleway', sans-serif;
+}

@@ -1,0 +1,65 @@
+.floating-toolbar-wrapper {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 900;
+  animation: slideUpToolbar 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUpToolbar {
+  from { opacity: 0; transform: translate(-50%, 40px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.floating-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 18px;
+  background: rgba(22, 33, 62, 0.92);
+  border: 1px solid rgba(199, 112, 240, 0.35);
+  border-radius: 50px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(199, 112, 240, 0.25);
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(199, 112, 240, 0.2);
+}
+
+.toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  color: #b0b0b0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 50px;
+  transition: all 0.2s ease;
+  font-family: 'Raleway', sans-serif;
+}
+
+.toolbar-btn:hover {
+  color: #c770f0;
+  background: rgba(199, 112, 240, 0.12);
+}
+
+.toolbar-count {
+  font-size: 0.88rem;
+}
+
+.bookmark-icon.active {
+  color: #c770f0;
+}
+
+.toolbar-btn.bookmarked {
+  color: #c770f0;
+}

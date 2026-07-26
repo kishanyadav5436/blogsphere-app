@@ -1,0 +1,79 @@
+.settings-page {
+  padding-top: 100px;
+  padding-bottom: 80px;
+  min-height: 100vh;
+  position: relative;
+}
+
+.settings-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.settings-title {
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.settings-subtitle {
+  color: #b0b0b0;
+  font-size: 0.98rem;
+}
+
+.settings-form {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+.avatar-form-group {
+  margin-bottom: 24px;
+}
+
+.avatar-input-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.avatar-preview-lg {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(270deg, #c770f0, #7f00ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid rgba(199, 112, 240, 0.4);
+}
+
+.avatar-preview-lg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .settings-form {
+    padding: 24px;
+  }
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}
