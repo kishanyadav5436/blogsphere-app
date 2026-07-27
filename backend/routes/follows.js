@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Follow = require('../models/Follow');
 const User = require('../models/User');
+const Notification = require('../models/Notification');
 const { protect } = require('../middleware/authMiddleware');
 
 // @route   POST /api/follow/:userId
@@ -34,6 +35,17 @@ router.post('/:userId', protect, async (req, res) => {
       follower: req.user._id,
       following: req.params.userId,
     });
+
+    // Create notification for target user
+    try {
+      await Notification.create({
+        recipient: req.params.userId,
+        actor: req.user._id,
+        type: 'follow',
+      });
+    } catch (notifErr) {
+      console.error('Failed to create follow notification:', notifErr.message);
+    }
 
     const followersCount = await Follow.countDocuments({ following: req.params.userId });
     res.status(201).json({ following: true, followersCount });

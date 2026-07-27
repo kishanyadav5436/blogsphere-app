@@ -3,6 +3,7 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const Post = require('../models/Post');
 const Follow = require('../models/Follow');
+const Notification = require('../models/Notification');
 const { protect } = require('../middleware/authMiddleware');
 
 // @route   GET /api/posts/trending
@@ -270,6 +271,20 @@ router.put('/:id/clap', protect, async (req, res) => {
     if (addClaps > 0) {
       post.claps.set(userId, currentClaps + addClaps);
       await post.save();
+
+      // Create notification for post author if not self
+      if (post.author.toString() !== userId) {
+        try {
+          await Notification.create({
+            recipient: post.author,
+            actor: req.user._id,
+            type: 'clap',
+            post: post._id,
+          });
+        } catch (notifErr) {
+          console.error('Failed to create clap notification:', notifErr.message);
+        }
+      }
     }
 
     // Compute total

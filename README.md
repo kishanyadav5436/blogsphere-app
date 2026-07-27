@@ -90,6 +90,20 @@ npm start
 
 ---
 
+## ☁️ Cloud Deployment (Render)
+
+This repository includes a 1-click **Render Blueprint** specification ([render.yaml](file:///d:/Blog_Post/render.yaml)).
+
+### 1-Click Blueprint Deployment:
+1. Push your code to GitHub (`kishanyadav5436/blogsphere-app`).
+2. Go to [Render Dashboard](https://dashboard.render.com) -> **New +** -> **Blueprint**.
+3. Connect your repository. Render will automatically configure the backend API and frontend static site.
+4. Supply your `MONGO_URI` (from MongoDB Atlas) when prompted.
+
+For complete step-by-step instructions, see our [Render Deployment Guide](file:///d:/Blog_Post/DEPLOYMENT_RENDER.md).
+
+---
+
 ## 📡 Core API Endpoints
 
 | Method | Endpoint | Description | Auth Required |

@@ -1,0 +1,61 @@
+# Render Blueprint Specification for BlogSphere Full-Stack Deployment
+# See https://render.com/docs/blueprint-spec for full details
+
+services:
+  # -------------------------------------------------------------
+  # 1. Backend Web Service (Node.js + Express API)
+  # -------------------------------------------------------------
+  - type: web
+    name: blogsphere-backend
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        sync: false # Set your MongoDB Atlas URI in the Render Dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRE
+        value: 7d
+      - key: CLIENT_URL
+        fromService:
+          type: web
+          name: blogsphere-frontend
+          property: url
+      - key: SUPABASE_URL
+        value: https://todcuzbuiikggzcuofck.supabase.co
+      - key: SUPABASE_ANON_KEY
+        value: sb_publishable_RPtIDbOyQnF0vvMLxJZWSQ_Cb7oAdqb
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        value: sb_publishable_RPtIDbOyQnF0vvMLxJZWSQ_Cb7oAdqb
+
+  # -------------------------------------------------------------
+  # 2. Frontend Static Site (React Single Page Application)
+  # -------------------------------------------------------------
+  - type: web
+    name: blogsphere-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./build
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: REACT_APP_API_URL
+        fromService:
+          type: web
+          name: blogsphere-backend
+          property: url
+      - key: REACT_APP_SUPABASE_URL
+        value: https://todcuzbuiikggzcuofck.supabase.co
+      - key: REACT_APP_SUPABASE_ANON_KEY
+        value: sb_publishable_RPtIDbOyQnF0vvMLxJZWSQ_Cb7oAdqb

@@ -7,9 +7,23 @@ dotenv.config();
 
 const app = express();
 
-// Middleware
+// Dynamic CORS origin configuration for development & Render production
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  process.env.FRONTEND_URL,
+  'http://localhost:3000',
+  'http://127.0.0.1:3000'
+].filter(Boolean);
+
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g. mobile apps, postman, curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.length === 0 || allowedOrigins.includes(origin) || origin.endsWith('.onrender.com')) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -26,7 +40,12 @@ app.use('/api/search', require('./routes/search'));
 
 // Health check
 app.get('/', (req, res) => {
-  res.json({ message: 'Blog API is running 🚀', status: 'OK' });
+  res.json({
+    message: 'BlogSphere API is running 🚀',
+    status: 'OK',
+    environment: process.env.NODE_ENV || 'development',
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Global error handler

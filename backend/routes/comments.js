@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Comment = require('../models/Comment');
 const Post = require('../models/Post');
+const Notification = require('../models/Notification');
 const { protect } = require('../middleware/authMiddleware');
 
 // @route   GET /api/posts/:postId/comments
@@ -81,6 +82,44 @@ router.post('/posts/:postId/comments', protect, async (req, res) => {
     });
 
     await comment.populate('author', 'name avatar headline');
+
+    // Create notification for post author if not self
+    if (post.author.toString() !== req.user._id.toString()) {
+      try {
+        await Notification.create({
+          recipient: post.author,
+          actor: req.user._id,
+          type: 'comment',
+          post: post._id,
+          comment: comment._id,
+        });
+      } catch (notifErr) {
+        console.error('Failed to create comment notification:', notifErr.message);
+      }
+    }
+
+    // If reply to comment, notify parent comment author if not self and not post author
+    if (parentComment) {
+      const parent = await Comment.findById(parentComment);
+      if (
+        parent &&
+        parent.author.toString() !== req.user._id.toString() &&
+        parent.author.toString() !== post.author.toString()
+      ) {
+        try {
+          await Notification.create({
+            recipient: parent.author,
+            actor: req.user._id,
+            type: 'reply',
+            post: post._id,
+            comment: comment._id,
+          });
+        } catch (notifErr) {
+          console.error('Failed to create reply notification:', notifErr.message);
+        }
+      }
+    }
+
     res.status(201).json(comment);
   } catch (err) {
     console.error(err);
