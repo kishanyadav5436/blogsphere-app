@@ -22,17 +22,18 @@
 .footer-logo {
   font-size: 1.5rem;
   font-weight: 800;
-  color: #1b1c1c;
+  color: #000000;
   display: inline-block;
   margin-bottom: 12px;
   font-family: 'Source Serif 4', serif;
 }
 
 .logo-accent {
-  background: linear-gradient(270deg, #c770f0, #7f00ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #000000;
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: initial;
+  background-clip: unset;
 }
 
 .footer-tagline {

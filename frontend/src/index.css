@@ -20,16 +20,16 @@
   --surface-dim: #dbdad9;
   --surface-bright: #fbf9f8;
   --surface-variant: #e4e2e2;
-  --accent-primary: #8a35b3;
-  --accent-secondary: #c770f0;
-  --primary-container: #c770f0;
-  --on-primary-container: #4d006e;
-  --accent-gradient: linear-gradient(135deg, #c770f0 0%, #8a35b3 100%);
-  --accent-glow: rgba(138, 53, 179, 0.18);
-  --text-primary: #1b1c1c;
-  --text-secondary: #5f5e5e;
-  --text-muted: #807382;
-  --on-surface-variant: #4e4351;
+  --accent-primary: #000000;
+  --accent-secondary: #1b1c1c;
+  --primary-container: #1b1c1c;
+  --on-primary-container: #000000;
+  --accent-gradient: linear-gradient(135deg, #000000 0%, #1b1c1c 100%);
+  --accent-glow: rgba(0, 0, 0, 0.08);
+  --text-primary: #000000;
+  --text-secondary: #1b1c1c;
+  --text-muted: #2b2b2b;
+  --on-surface-variant: #000000;
   --border-color: #efeded;
   --border-hover: #d1c2d3;
   --outline: #807382;
@@ -190,10 +190,11 @@ input, textarea, select {
    TYPOGRAPHY UTILITIES
    =========================== */
 .gradient-text {
-  background: var(--accent-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #000000;
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: initial;
+  background-clip: unset;
 }
 
 /* Cosmic Ambient Glow Blobs */
