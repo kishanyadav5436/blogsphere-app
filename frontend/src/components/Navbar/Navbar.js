@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { FiBookmark, FiLogIn, FiLogOut, FiSettings, FiUser, FiUserPlus, FiMoon, FiSun, FiSearch } from 'react-icons/fi';
+import { FiBookmark, FiLogIn, FiLogOut, FiSettings, FiUser, FiUserPlus, FiMoon, FiSun, FiSearch, FiEdit } from 'react-icons/fi';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -82,6 +82,9 @@ const Navbar = () => {
         <div className="nav-desktop-links">
           <NavLink to="/" className="nav-link" onClick={closeMenu} end>Home</NavLink>
           <NavLink to="/blog" className="nav-link" onClick={closeMenu}>Explore</NavLink>
+          <NavLink to="/create" className="nav-link write-story-link" onClick={closeMenu}>
+            <FiEdit style={{ fontSize: '1.05rem', marginRight: '6px' }} /> Write
+          </NavLink>
         </div>
 
         {/* Desktop Right Actions */}
@@ -127,6 +130,9 @@ const Navbar = () => {
                   <div className="dropdown-divider" />
                   <Link to={`/profile/${user?._id}`} className="dropdown-item" onClick={closeMenu}>
                     <FiUser /> Profile
+                  </Link>
+                  <Link to="/create" className="dropdown-item" onClick={closeMenu}>
+                    <FiEdit /> Write Story
                   </Link>
                   <Link to="/reading-list" className="dropdown-item" onClick={closeMenu}>
                     <FiBookmark /> Reading List
