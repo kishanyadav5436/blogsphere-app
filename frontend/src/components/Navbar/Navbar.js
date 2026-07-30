@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { FiBookmark, FiLogIn, FiLogOut, FiSettings, FiUser, FiUserPlus } from 'react-icons/fi';
+import { FiBookmark, FiLogIn, FiLogOut, FiSettings, FiUser, FiUserPlus, FiMoon, FiSun, FiSearch } from 'react-icons/fi';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -92,12 +92,12 @@ const Navbar = () => {
             onClick={toggleTheme}
             title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
           >
-            <span className="material-symbols-outlined">{theme === 'light' ? 'dark_mode' : 'light_mode'}</span>
+            {theme === 'light' ? <FiMoon style={{ fontSize: '1.2rem' }} /> : <FiSun style={{ fontSize: '1.2rem' }} />}
           </button>
 
           {/* Search Toggle (Ctrl + K) */}
           <button className="nav-icon-btn" onClick={() => setSearchOpen(!searchOpen)} title="Search (Ctrl + K)">
-            <span className="material-symbols-outlined">search</span>
+            <FiSearch style={{ fontSize: '1.2rem' }} />
           </button>
 
           {/* Notification Bell */}
@@ -209,26 +209,6 @@ const Navbar = () => {
         </div>
       )}
     </nav>
-
-      {/* Floating Mobile Bottom Navigation */}
-      <nav className="mobile-bottom-nav">
-        <NavLink to="/" className={({ isActive }) => `mobile-bottom-item ${isActive ? 'active' : ''}`} onClick={closeMenu} end>
-          <span className="material-symbols-outlined">home</span>
-          <span>Home</span>
-        </NavLink>
-        <NavLink to="/blog" className={({ isActive }) => `mobile-bottom-item ${isActive ? 'active' : ''}`} onClick={closeMenu}>
-          <span className="material-symbols-outlined">explore</span>
-          <span>Explore</span>
-        </NavLink>
-        <NavLink to={isAuthenticated ? "/create" : "/login"} className={({ isActive }) => `mobile-bottom-item ${isActive ? 'active' : ''}`} onClick={closeMenu}>
-          <span className="material-symbols-outlined">add_circle</span>
-          <span>Write</span>
-        </NavLink>
-        <NavLink to={isAuthenticated ? `/profile/${user?._id}` : "/login"} className={({ isActive }) => `mobile-bottom-item ${isActive ? 'active' : ''}`} onClick={closeMenu}>
-          <span className="material-symbols-outlined">person</span>
-          <span>Profile</span>
-        </NavLink>
-      </nav>
     </>
   );
 };

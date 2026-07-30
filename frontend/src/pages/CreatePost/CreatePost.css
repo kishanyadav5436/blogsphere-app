@@ -180,41 +180,6 @@
   margin-top: 24px;
 }
 
-.btn-spinner {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  margin-right: 6px;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 18px;
-  background: var(--surface-container-low);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-full);
-  color: var(--text-secondary);
-  font-size: 0.88rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.25s;
-  font-family: var(--font-main);
-  margin-bottom: 20px;
-}
-
-.back-btn:hover {
-  background: var(--surface-container);
-  color: var(--accent-primary);
-  border-color: var(--border-hover);
-}
 
 @media (max-width: 768px) {
   .create-form  { padding: 24px 20px; }

@@ -17,7 +17,7 @@
 }
 
 .settings-subtitle {
-  color: #b0b0b0;
+  color: var(--text-secondary);
   font-size: 0.98rem;
 }
 

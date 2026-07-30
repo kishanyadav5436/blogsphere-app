@@ -71,6 +71,11 @@ const BlogDetail = () => {
             })
             .catch(() => {});
         }
+
+        // Fetch comment count for floating toolbar
+        axios.get(`/api/posts/${id}/comments`)
+          .then(({ data: cData }) => setCommentCount(cData.totalCount || 0))
+          .catch(() => {});
       } catch {
         toast.error('Story not found');
         navigate('/blog');

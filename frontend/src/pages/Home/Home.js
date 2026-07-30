@@ -1,242 +1,183 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import BlogCard from '../../components/BlogCard/BlogCard';
-import TopicChips from '../../components/TopicChips/TopicChips';
-import AuthorSpotlight from '../../components/AuthorSpotlight/AuthorSpotlight';
-import SocialConnect from '../../components/SocialConnect/SocialConnect';
-import { FiArrowRight } from 'react-icons/fi';
+import MediumPostRow from '../../components/MediumPostRow/MediumPostRow';
+import MediumSidebar from '../../components/MediumSidebar/MediumSidebar';
+import { FiPlus, FiX } from 'react-icons/fi';
 import { useAuth } from '../../context/AuthContext';
 import './Home.css';
 
-const TYPEWRITER_PHRASES = [
-  'Explore the Universe of Thoughts',
-  'Share Your Unique Story',
-  'Connect with Global Creators'
+const HOME_TABS = [
+  'For you',
+  'Featured',
+  'Technology',
+  'AI',
+  'Design',
+  'Business',
+  'Coding',
+  'Philosophy'
+];
+
+const FEATURED_AUTHORS_DATA = [
+  {
+    _id: 'author-1',
+    name: 'Dr. Elena Rostova',
+    headline: 'Lead AI Scientist @ DeepMind Research',
+    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80',
+    bio: 'Writing on machine cognition, AI ethics, and neural representations.'
+  },
+  {
+    _id: 'author-2',
+    name: 'Marcus Vance',
+    headline: 'VP of Product Design @ PixelCraft',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+    bio: 'Building next-generation design systems and glassmorphic UI.'
+  },
+  {
+    _id: 'author-3',
+    name: 'Alex Nova',
+    headline: 'Senior Technology Analyst @ Cosmic Labs',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+    bio: 'Quantum networks researcher, tech columnist & digital minimalist.'
+  }
 ];
 
 const Home = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const [phraseIndex, setPhraseIndex] = useState(0);
-  const [charIndex, setCharIndex]     = useState(0);
-  const [isDeleting, setIsDeleting]   = useState(false);
-  const [recentPosts, setRecentPosts] = useState([]);
-  const [stats, setStats]             = useState({ posts: 0 });
+  const [activeTab, setActiveTab] = useState('For you');
+  const [showPromo, setShowPromo] = useState(true);
+  const [posts, setPosts] = useState([]);
+  const [staffPicks, setStaffPicks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [hiddenPostIds, setHiddenPostIds] = useState([]);
 
-  // Typewriter Effect
+  // Fetch feed posts when activeTab changes
   useEffect(() => {
-    const currentPhrase = TYPEWRITER_PHRASES[phraseIndex];
-    let speed = isDeleting ? 50 : 120;
-
-    if (!isDeleting && charIndex === currentPhrase.length) {
-      speed = 2200; // Pause at end of phrase
-    } else if (isDeleting && charIndex === 0) {
-      setIsDeleting(false);
-      setPhraseIndex((prev) => (prev + 1) % TYPEWRITER_PHRASES.length);
-      speed = 400;
+    setLoading(true);
+    let endpoint = '/api/posts?limit=12';
+    if (activeTab === 'Featured') {
+      endpoint = '/api/posts/trending?limit=10';
+    } else if (activeTab !== 'For you') {
+      endpoint = `/api/posts?tag=${encodeURIComponent(activeTab)}&limit=10`;
     }
 
-    const timer = setTimeout(() => {
-      if (!isDeleting && charIndex < currentPhrase.length) {
-        setCharIndex(charIndex + 1);
-      } else if (isDeleting && charIndex > 0) {
-        setCharIndex(charIndex - 1);
-      } else if (!isDeleting && charIndex === currentPhrase.length) {
-        setIsDeleting(true);
-      }
-    }, speed);
-
-    return () => clearTimeout(timer);
-  }, [charIndex, isDeleting, phraseIndex]);
-
-  // Fetch recent posts & total count
-  useEffect(() => {
-    axios.get('/api/posts?limit=6')
+    axios.get(endpoint)
       .then(({ data }) => {
-        setRecentPosts(data.posts || []);
-        setStats(s => ({ ...s, posts: data.pagination?.total || 0 }));
+        const fetchedPosts = Array.isArray(data) ? data : (data.posts || []);
+        setPosts(fetchedPosts);
+      })
+      .catch(() => setPosts([]))
+      .finally(() => setLoading(false));
+  }, [activeTab]);
+
+  // Fetch staff picks (trending posts) once
+  useEffect(() => {
+    axios.get('/api/posts/trending?limit=4')
+      .then(({ data }) => {
+        setStaffPicks(Array.isArray(data) ? data : []);
       })
       .catch(() => {});
   }, []);
 
-  const mainFeature = recentPosts[0];
-  const sideFeatures = recentPosts.slice(1, 3);
+  const handleHidePost = (postId) => {
+    setHiddenPostIds((prev) => [...prev, postId]);
+  };
+
+  const visiblePosts = posts.filter((p) => !hiddenPostIds.includes(p._id));
 
   return (
-    <div className="home-page-container relative overflow-hidden">
-      {/* Background Ambient Glow Blobs */}
-      <div className="cosmic-glow-blob" style={{ top: '-100px', left: '10%' }} />
-      <div className="cosmic-glow-blob" style={{ top: '500px', right: '5%', animationDelay: '-5s' }} />
-
-      {/* ── HERO SECTION (Cosmic Editorial Centered) ── */}
-      <section className="hero-editorial-section">
-        <div className="hero-editorial-content">
-          <h1 className="hero-typewriter-title">
-            <span className="typewriter-text">
-              {TYPEWRITER_PHRASES[phraseIndex].substring(0, charIndex)}
+    <div className="medium-home-container">
+      {/* 1. Top Promo Banner (Medium Style) */}
+      {showPromo && (
+        <div className="medium-promo-banner">
+          <div className="promo-banner-content">
+            <span className="promo-icon">✦</span>
+            <span className="promo-text">
+              Get unlimited access to the best of BlogSphere for less than $1/week.{' '}
+              <Link to={isAuthenticated ? '/create' : '/register'} className="promo-link">
+                Become a member
+              </Link>
             </span>
-            <span className="typewriter-cursor"></span>
-          </h1>
-
-          <p className="hero-editorial-subtitle">
-            Join a global ecosystem of thinkers, creators, and storytellers. Immerse yourself in the next generation of digital expression.
-          </p>
-
-          <button
-            onClick={() => navigate(isAuthenticated ? '/create' : '/register')}
-            className="primary-gradient-button hero-cta-btn"
+          </div>
+          <button 
+            className="promo-close-btn" 
+            onClick={() => setShowPromo(false)} 
+            title="Dismiss notification"
           >
-            {isAuthenticated ? 'Start Writing' : 'Get Started Free'}
+            <FiX />
           </button>
         </div>
-      </section>
-
-      {/* ── STATS GRID ── */}
-      <section className="stats-editorial-section page-wrapper">
-        <div className="stats-grid">
-          <div className="editorial-card stat-editorial-card">
-            <span className="material-symbols-outlined stat-icon-material">group</span>
-            <h3 className="stat-value-text">10K+</h3>
-            <p className="stat-label-text">Authors</p>
-          </div>
-
-          <div className="editorial-card stat-editorial-card">
-            <span className="material-symbols-outlined stat-icon-material">auto_stories</span>
-            <h3 className="stat-value-text">{stats.posts > 0 ? `${stats.posts}+` : '50K+'}</h3>
-            <p className="stat-label-text">Stories</p>
-          </div>
-
-          <div className="editorial-card stat-editorial-card">
-            <span className="material-symbols-outlined stat-icon-material">visibility</span>
-            <h3 className="stat-value-text">1M+</h3>
-            <p className="stat-label-text">Readers</p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── TOPIC BAR ── */}
-      <section className="page-wrapper topics-editorial-wrap">
-        <TopicChips />
-      </section>
-
-      {/* ── FEATURED CONTENT ("TRENDING REALITIES") ── */}
-      <section className="page-wrapper featured-editorial-section">
-        <div className="featured-header-row">
-          <div>
-            <h2 className="editorial-section-title">Trending Realities</h2>
-            <p className="editorial-section-sub">The most captivating thoughts from the stratosphere.</p>
-          </div>
-          <Link to="/blog" className="view-universe-link">
-            View Universe <FiArrowRight />
-          </Link>
-        </div>
-
-        <div className="featured-grid">
-          {/* Main Feature Card */}
-          <div className="editorial-card main-feature-card group" onClick={() => mainFeature && navigate(`/blog/${mainFeature._id}`)}>
-            <div className="main-feature-img-wrapper">
-              <div
-                className="main-feature-img"
-                style={{
-                  backgroundImage: `url(${mainFeature?.coverImage || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=80'})`
-                }}
-              />
-            </div>
-            <div className="main-feature-body">
-              <div className="badges-row">
-                <span className="category-badge">{mainFeature?.category || 'Technology'}</span>
-                <span className="read-time-badge">{mainFeature?.readTime || 5} min read</span>
-              </div>
-              <h4 className="main-feature-title">
-                {mainFeature?.title || 'Architecting the Quantum Web: A New Era of Decentralized Connectivity'}
-              </h4>
-              <p className="main-feature-snippet">
-                {mainFeature?.snippet || 'Discover how quantum entanglement is reshaping our understanding of global networks and what it means for digital privacy...'}
-              </p>
-            </div>
-          </div>
-
-          {/* Side Column Cards */}
-          <div className="side-features-column">
-            {sideFeatures.length > 0 ? (
-              sideFeatures.map((post) => (
-                <div
-                  key={post._id}
-                  className="editorial-card side-feature-card group"
-                  onClick={() => navigate(`/blog/${post._id}`)}
-                >
-                  <div className="side-feature-img-wrap">
-                    <img
-                      src={post.coverImage || 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=400&q=80'}
-                      alt={post.title}
-                      className="side-feature-img"
-                    />
-                  </div>
-                  <div className="side-feature-info">
-                    <span className="side-category-text">{post.category || 'Innovation'}</span>
-                    <h4 className="side-feature-title">{post.title}</h4>
-                    <p className="side-feature-snippet">{post.snippet}</p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <>
-                <div className="editorial-card side-feature-card group" onClick={() => navigate('/blog')}>
-                  <div className="side-feature-img-wrap">
-                    <img
-                      src="https://images.unsplash.com/photo-1507499739999-097706ad8914?auto=format&fit=crop&w=400&q=80"
-                      alt="Philosophy"
-                      className="side-feature-img"
-                    />
-                  </div>
-                  <div className="side-feature-info">
-                    <span className="side-category-text">Philosophy</span>
-                    <h4 className="side-feature-title">The Solitude of Digital Existence</h4>
-                    <p className="side-feature-snippet">Exploring human connection in a world of pixels.</p>
-                  </div>
-                </div>
-
-                <div className="editorial-card side-feature-card group" onClick={() => navigate('/blog')}>
-                  <div className="side-feature-img-wrap">
-                    <img
-                      src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=400&q=80"
-                      alt="Innovation"
-                      className="side-feature-img"
-                    />
-                  </div>
-                  <div className="side-feature-info">
-                    <span className="side-category-text">Innovation</span>
-                    <h4 className="side-feature-title">Neuro-Interfaces: The End of Typing</h4>
-                    <p className="side-feature-snippet">Direct thought-to-blog technology is closer than anticipated.</p>
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* ── ALL RECENT STORIES GRID ── */}
-      {recentPosts.length > 3 && (
-        <section className="page-wrapper recent-grid-section">
-          <h2 className="editorial-section-title">Latest Articles</h2>
-          <p className="editorial-section-sub">Fresh perspectives from our community</p>
-          <div className="recent-posts-grid">
-            {recentPosts.slice(3).map((post, i) => (
-              <BlogCard key={post._id} post={post} index={i} />
-            ))}
-          </div>
-        </section>
       )}
 
-      {/* ── AUTHOR SPOTLIGHT ── */}
-      <section className="page-wrapper">
-        <AuthorSpotlight />
-      </section>
+      {/* 2. Main 2-Column Responsive Layout */}
+      <div className="medium-home-wrapper">
+        {/* Left Column: Feed & Tabs */}
+        <main className="medium-feed-column">
+          {/* Medium Header Tabs */}
+          <nav className="medium-tabs-nav">
+            <button className="tabs-scroll-btn plus-btn" title="Add topic filter">
+              <FiPlus />
+            </button>
 
-      {/* ── SOCIAL CONNECT ── */}
-      <SocialConnect />
+            <div className="tabs-scroll-container">
+              {HOME_TABS.map((tab) => (
+                <button
+                  key={tab}
+                  className={`medium-tab-item ${activeTab === tab ? 'active' : ''}`}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab}
+                  {activeTab === tab && <div className="tab-active-indicator" />}
+                </button>
+              ))}
+            </div>
+          </nav>
+
+          {/* Feed Content */}
+          {loading ? (
+            <div className="medium-feed-loading">
+              <div className="spinner-container">
+                <div className="spinner" />
+                <p>Loading stories...</p>
+              </div>
+            </div>
+          ) : visiblePosts.length > 0 ? (
+            <div className="medium-feed-list">
+              {visiblePosts.map((post, idx) => (
+                <MediumPostRow 
+                  key={post._id} 
+                  post={post} 
+                  index={idx}
+                  onHidePost={handleHidePost}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="empty-state medium-empty-state">
+              <div className="empty-icon">📖</div>
+              <h3>No stories found in "{activeTab}"</h3>
+              <p>Be the first to publish an article in this topic topic!</p>
+              <button 
+                onClick={() => navigate('/create')}
+                className="btn-primary"
+                style={{ marginTop: '16px' }}
+              >
+                Write a Story
+              </button>
+            </div>
+          )}
+        </main>
+
+        {/* Right Column: Medium Sidebar */}
+        <MediumSidebar 
+          staffPicks={staffPicks}
+          topics={HOME_TABS.slice(2)}
+          selectedTopic={activeTab}
+          onSelectTopic={(topic) => setActiveTab(topic)}
+          authors={FEATURED_AUTHORS_DATA}
+        />
+      </div>
     </div>
   );
 };
